@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Added by me
+*.user
+build-p2ptcpclient-Desktop_Qt_6_4_2_GCC_64bit-Debug
