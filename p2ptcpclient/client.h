@@ -1,11 +1,27 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <QObject>
+#include <QTcpSocket>
+#include <QDebug>
 
-class client
+#include <string>
+
+class client : public QObject
 {
+    Q_OBJECT
 public:
-    client();
+    explicit client(QObject *parent = 0);
+
+    void firstConnect(std::string IP, int port);
+
+signals:
+
+public slots:
+
+private:
+    QTcpSocket *socket;
+
 };
 
-#endif // CLIENT_H
+#endif // client_H

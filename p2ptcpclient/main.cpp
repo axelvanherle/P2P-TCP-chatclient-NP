@@ -1,8 +1,30 @@
 #include <QCoreApplication>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+#include "client.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    // Check the arguments that we have received.
+    if(argc == 1)
+    {
+        cout << "You passed 0 arguments. Waiting for a connection." << endl;
+    }
+    else if(argc == 3)
+    {
+        cout << "You are sending to IP " << argv[1] << " and port " << argv[2] << endl;
+        client client;
+        client.firstConnect(argv[1],atoi(argv[2]));
+    }
+    else
+    {
+        cout << "Wrong usage of arguments; pass IP <space> PORT." << endl;
+    }
 
     return a.exec();
 }
