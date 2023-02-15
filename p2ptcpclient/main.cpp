@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    client client;
+
     // Check the arguments that we have received.
     if(argc == 1)
     {
@@ -18,7 +20,6 @@ int main(int argc, char *argv[])
     else if(argc == 3)
     {
         cout << "You are sending to IP " << argv[1] << " and port " << argv[2] << endl;
-        client client;
         client.firstConnect(argv[1],atoi(argv[2]));
     }
     else

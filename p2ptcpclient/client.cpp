@@ -1,6 +1,11 @@
 #include "client.h"
 #include <iostream>
 
+#include <string>
+#include <sstream>
+
+using namespace std;
+
 client::client(QObject *parent) :
     QObject(parent)
 {
@@ -8,23 +13,31 @@ client::client(QObject *parent) :
 
 void client::firstConnect(std::string IP, int port)
 {
+    string recv;
+
     socket = new QTcpSocket(this);
 
     socket->connectToHost(IP.c_str(), port);
 
     if(socket->waitForConnected(3000))
     {
-        std::cout << "Connected!" << std::endl;
-
-        socket->write("hello server\r\n\r\n\r\n\r\n");
-        socket->write("hello server\r\n\r\n\r\n\r\n");
-        socket->write("hello server\r\n\r\n\r\n\r\n");
+        socket->write("NEWCON");
         socket->waitForBytesWritten(1000);
-        socket->waitForReadyRead(3000);
-        qDebug() << "Reading: " << socket->bytesAvailable();
+        socket->waitForReadyRead(10000);
 
-        qDebug() << socket->readAll();
+        recv = socket->readAll();
+        cout << "received : "<< recv << endl;
 
+        istringstream ss(recv);
+        string token, ip, port;
+        getline(ss, token); // discard first line
+        while (getline(ss, token))
+        {
+            stringstream tokenStream(token);
+            getline(tokenStream, ip, ':');
+            getline(tokenStream, port);
+            cout << "IP: " << ip << ", Port: " << port << std::endl;
+        }
         socket->close();
     }
     else
