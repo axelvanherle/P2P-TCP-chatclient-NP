@@ -13,35 +13,66 @@ client::client(QObject *parent) :
 
 void client::firstConnect(std::string IP, int port)
 {
+    //Used to keep track of the current socket.
+    int i = 0;
     string recv;
 
-    socket = new QTcpSocket(this);
+    // Get the first socket.
+    socketList.push_back(new QTcpSocket(this));
 
-    socket->connectToHost(IP.c_str(), port);
+    // Get me a damn socket! Grrrr
+    socketList[i]->connectToHost(IP.c_str(), port);
 
-    if(socket->waitForConnected(3000))
+    if(socketList[i]->waitForConnected(3000))
     {
-        socket->write("NEWCON");
-        socket->waitForBytesWritten(1000);
-        socket->waitForReadyRead(10000);
+        socketList[i]->write("NEWCON");
+        socketList[i]->waitForBytesWritten(1000);
+        socketList[i]->waitForReadyRead(10000);
 
-        recv = socket->readAll();
-        cout << "received : "<< recv << endl;
+        // Were at the last point in the firstconnect phase where we need this socket, so we can move on to the next one.
+        recv = socketList[i++]->readAll();
+        cout << "received : " << recv << endl;
 
+        // Parse the received buffer filled with new IP and Ports.
         istringstream ss(recv);
-        string token, ip, port;
+        string token, newIP, newPort;
         getline(ss, token); // discard first line
         while (getline(ss, token))
         {
             stringstream tokenStream(token);
-            getline(tokenStream, ip, ':');
-            getline(tokenStream, port);
-            cout << "IP: " << ip << ", Port: " << port << std::endl;
+            getline(tokenStream, newIP, ':');
+            getline(tokenStream, newPort);
+            cout << "IP: " << newIP << ", Port: " << newPort << std::endl;
+
+            socketList.push_back(new QTcpSocket(this));
+
+            socketList[i]->connectToHost(newIP.c_str(), atoi(newPort.c_str()));
+
+            if(socket->waitForConnected(3000))
+            {
+                socketList[i]->write("NEWCON");
+                socketList[i]->waitForBytesWritten(1000);
+                socketList[i]->waitForReadyRead(10000);
+
+                // Were at the last point in the firstconnect phase where we need this socket, so we can move on to the next one.
+                socketList[i++]->readAll();
+            }
+            else
+            {
+                qDebug() << "No reply.";
+            }
         }
-        socket->close();
     }
     else
     {
         qDebug() << "No reply.";
     }
+}
+
+void client::sendMessage(void)
+{
+}
+
+void client::receiveMessage(void)
+{
 }
