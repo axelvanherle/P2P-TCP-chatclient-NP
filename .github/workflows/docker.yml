@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - "main"
-    paths:
-      - 'p2ptcpclient/main.cpp'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
