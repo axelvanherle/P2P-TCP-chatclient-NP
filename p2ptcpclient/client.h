@@ -7,7 +7,11 @@
 #include <QAbstractSocket>
 #include <QDebug>
 
+#include <iostream>
+#include <sstream>
 #include <string>
+
+using namespace std;
 
 class client : public QObject
 {

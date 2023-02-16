@@ -1,10 +1,4 @@
 #include "client.h"
-#include <iostream>
-
-#include <string>
-#include <sstream>
-
-using namespace std;
 
 client::client(QObject *parent) : QObject(parent)
 {
