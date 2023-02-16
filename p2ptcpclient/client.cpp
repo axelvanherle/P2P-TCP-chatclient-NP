@@ -73,8 +73,9 @@ void client::sendMessage()
     while (1)
     {
         // Read a line of input from the user
-        std::string buffer;
-        std::getline(std::cin, buffer);
+        string buffer;
+        cout << "Message: ";
+        getline(std::cin, buffer);
 
         // Loop through all connected sockets and send the input to each one
         for (QTcpSocket* socket : socketList)
@@ -98,7 +99,7 @@ void client::receiveMessage()
             {
                 // Read the data and print a message
                 QString buffer = socket->readAll();
-                qDebug() << "New message from" << socket << ": " << buffer.toStdU16String();
+                qDebug() << "New message from" << socket << ": " << buffer;
             }
         }
     }
