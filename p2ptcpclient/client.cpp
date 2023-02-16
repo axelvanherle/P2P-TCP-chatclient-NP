@@ -84,24 +84,16 @@ void client::sendMessage(void)
 
 void client::receiveMessage(void)
 {
-    for(;;)
+    while(1)
     {
-        string buffer;
-        if (socketList[0]->waitForReadyRead(0))
-        {
-            buffer = socketList[0]->readAll();
-            cout << buffer << endl;
-        }
-        /*
         for (unsigned long long var = 0; var < socketList.size(); ++var)
         {
             string buffer;
             if (socketList[var]->waitForReadyRead(0))
             {
                 buffer = socketList[var]->readAll();
-                cout << buffer;
+                cout << "New message from [" << socketList[var] << "]: " << buffer << endl;
             }
         }
-        */
     }
 }
