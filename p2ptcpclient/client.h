@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <qtcpserver.h>
 #include <QAbstractSocket>
 #include <QDebug>
 
@@ -15,13 +16,15 @@ public:
     explicit client(QObject *parent = 0);
 
     void firstConnect(std::string IP, int port);
+    void sendMessage(void);
+    void receiveMessage(void);
+    void waitForNewConnection(void);
 signals:
 
 public slots:
-    void sendMessage(void);
-    void receiveMessage(void);
+
 private:
-    std::vector <QTcpSocket *> socketList;
+    std::vector<QTcpSocket *> socketList;
 };
 
 #endif // client_H

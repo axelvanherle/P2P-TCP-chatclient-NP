@@ -23,7 +23,7 @@ void client::firstConnect(std::string IP, int port)
     firstSocket->waitForReadyRead(1000);
 
     // Are we connected?
-    if(firstSocket->state()!= QAbstractSocket::ConnectedState)
+    if (firstSocket->state() != QAbstractSocket::ConnectedState)
     {
         cout << "Failed to connect to " << IP << " on port " << port << "." << endl;
         exit(1);
@@ -33,7 +33,9 @@ void client::firstConnect(std::string IP, int port)
 
     recv = firstSocket->readAll();
     cout << "Successfully connected to " << IP << " on port " << port << "." << endl
-         << "Received:" << endl << "==========" << endl << recv << "==========" << endl;
+         << "Received:" << endl
+         << "==========" << endl
+         << recv << "==========" << endl;
 
     // Parse the received buffer filled with new IP and Ports.
     istringstream ss(recv);
@@ -56,14 +58,14 @@ void client::firstConnect(std::string IP, int port)
 
         temp = socket->readAll();
         // Are we connected?
-        if(socket->state() == QAbstractSocket::ConnectedState)
+        if (socket->state() == QAbstractSocket::ConnectedState)
         {
-            cout << "Connected to " << newIP << ":" << newPort << " successfully!" <<endl;
+            cout << "Connected to " << newIP << ":" << newPort << " successfully!" << endl;
             socketList.push_back(socket);
         }
         else
         {
-           cout << "Did not connected to " << newIP << ":" << newPort << " successfully." <<endl;
+            cout << "Failed to connect to " << newIP << ":" << newPort << "." << endl;
         }
     }
 }
@@ -78,7 +80,7 @@ void client::sendMessage()
         getline(std::cin, buffer);
 
         // Loop through all connected sockets and send the input to each one
-        for (QTcpSocket* socket : socketList)
+        for (QTcpSocket *socket : socketList)
         {
             socket->write(buffer.c_str());
             socket->waitForBytesWritten(1000);
@@ -86,22 +88,52 @@ void client::sendMessage()
     }
 }
 
-
 void client::receiveMessage()
 {
     while (1)
     {
         // Loop through all connected sockets
-        for (QTcpSocket* socket : socketList)
+        for (QTcpSocket *socket : socketList)
         {
             // Check if there is any data available to read
             if (socket->waitForReadyRead(0))
             {
                 // Read the data and print a message
                 QString buffer = socket->readAll();
-                qDebug() << "New message from" << socket << ": " << buffer;
+                qDebug() << "New message from" << socket->peerAddress().toString() << ": " << buffer;
             }
         }
     }
 }
 
+void client::waitForNewConnection(void)
+{
+    // Create a new TCP server object
+    QTcpServer server(this);
+
+    int port = 24042;
+
+    // Listen for incoming connections on the specified port
+    if (!server.listen(QHostAddress::Any, port))
+    {
+        qDebug() << "Server failed to start. Error:" << server.errorString();
+        exit(1);
+    }
+
+    cout << "Server started. Listening on port " << port;
+
+    // Wait for new connections
+    while (server.isListening())
+    {
+        if (server.waitForNewConnection(-1))
+        {
+            // Accept the new connection
+            QTcpSocket *socket = server.nextPendingConnection();
+
+            // Add the new socket to the socket list
+            socketList.push_back(socket);
+
+            qDebug() << "New connection from" << socket->peerAddress().toString() << ":" << socket->peerPort();
+        }
+    }
+}
