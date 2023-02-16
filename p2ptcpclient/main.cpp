@@ -16,14 +16,17 @@ int main(int argc, char *argv[])
     if (argc == 1)
     {
         cout << "You passed 0 arguments. Waiting for a connection." << endl;
+        client.sendMessage();
+        client.receiveMessage();
         client.waitForNewConnection();
     }
     else if (argc == 3)
     {
         cout << "You are sending to IP " << argv[1] << " and port " << argv[2] << endl;
         client.firstConnect(argv[1], atoi(argv[2]));
-        // client.sendMessage();
+        client.sendMessage();
         client.receiveMessage();
+        client.waitForNewConnection();
 
         cout << "test";
     }
