@@ -13,21 +13,27 @@ client::client(QObject *parent) : QObject(parent)
 void client::firstConnect(std::string IP, int port)
 {
     // Used to keep track of the current socket.
-    int i = 0;
     string recv;
-
-    // Get the first socket.
-    socketList.push_back(new QTcpSocket(this));
+    QTcpSocket *firstSocket = new QTcpSocket(this);
 
     // Get me a damn socket! Grrrr
-    socketList[i]->connectToHost(IP.c_str(), port);
-    socketList[i]->write("BLA");
-    socketList[i]->waitForBytesWritten(1000);
-    socketList[i]->waitForReadyRead(1000);
+    firstSocket->connectToHost(IP.c_str(), port);
+    firstSocket->write("Hello there!");
+    firstSocket->waitForBytesWritten(1000);
+    firstSocket->waitForReadyRead(1000);
 
-    // Were at the last point in the firstconnect phase where we need this socket, so we can move on to the next one.
-    recv = socketList[i++]->readAll();
-    cout << "received : " << recv << endl;
+    // Are we connected?
+    if(firstSocket->state()!= QAbstractSocket::ConnectedState)
+    {
+        cout << "Failed to connect to " << IP << " on port " << port << "." << endl;
+        exit(1);
+    }
+
+    socketList.push_back(firstSocket);
+
+    recv = firstSocket->readAll();
+    cout << "Successfully connected to " << IP << " on port " << port << "." << endl
+         << "Received:" << endl << "==========" << endl << recv << "==========" << endl;
 
     // Parse the received buffer filled with new IP and Ports.
     istringstream ss(recv);
@@ -40,17 +46,25 @@ void client::firstConnect(std::string IP, int port)
         stringstream tokenStream(token);
         getline(tokenStream, newIP, ':');
         getline(tokenStream, newPort);
-        cout << "IP: " << newIP << ", Port: " << newPort << std::endl;
 
-        socketList.push_back(new QTcpSocket(this));
+        QTcpSocket *socket = new QTcpSocket(this);
 
-        socketList[i]->connectToHost(newIP.c_str(), atoi(newPort.c_str()));
-        socketList[i]->write("IN LOOP");
-        socketList[i]->waitForBytesWritten(1000);
-        socketList[i]->waitForReadyRead(1000);
-        // Were at the last point in the firstconnect phase where we need this socket, so we can move on to the next one.
-        temp = socketList[i++]->readAll();
-        cout << temp << endl;
+        socket->connectToHost(newIP.c_str(), atoi(newPort.c_str()));
+        socket->write("IN LOOP");
+        socket->waitForBytesWritten(1000);
+        socket->waitForReadyRead(1000);
+
+        temp = socket->readAll();
+        // Are we connected?
+        if(socket->state() == QAbstractSocket::ConnectedState)
+        {
+            cout << "Connected to " << newIP << ":" << newPort << " successfully!" <<endl;
+            socketList.push_back(socket);
+        }
+        else
+        {
+           cout << "Did not connected to " << newIP << ":" << newPort << " successfully." <<endl;
+        }
     }
 }
 
@@ -58,9 +72,32 @@ void client::sendMessage(void)
 {
     string buffer;
     cin >> buffer;
-    cout << buffer;
+    for (unsigned long long var = 0; var < socketList.size(); ++var)
+    {
+        socketList[var]->write(buffer.c_str());
+    }
 }
 
 void client::receiveMessage(void)
 {
+    for(;;)
+    {
+        string buffer;
+        if (socketList[0]->waitForReadyRead(0))
+        {
+            buffer = socketList[0]->readAll();
+            cout << buffer << endl;
+        }
+        /*
+        for (unsigned long long var = 0; var < socketList.size(); ++var)
+        {
+            string buffer;
+            if (socketList[var]->waitForReadyRead(0))
+            {
+                buffer = socketList[var]->readAll();
+                cout << buffer;
+            }
+        }
+        */
+    }
 }

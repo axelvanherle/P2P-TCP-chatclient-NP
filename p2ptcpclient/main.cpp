@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     {
         cout << "You are sending to IP " << argv[1] << " and port " << argv[2] << endl;
         client.firstConnect(argv[1],atoi(argv[2]));
+        client.receiveMessage();
 
         cout << "test";
     }
