@@ -84,24 +84,14 @@ void client::sendMessage(void)
 
 void client::receiveMessage(void)
 {
-    for(;;)
+    while(1)
     {
-        string buffer;
-        if (socketList[0]->waitForReadyRead(0))
-        {
-            buffer = socketList[0]->readAll();
-            cout << buffer << endl;
-        }
-        /*
+        char buffer[256] = {0};
+        cin.getline(buffer,256);
         for (unsigned long long var = 0; var < socketList.size(); ++var)
         {
-            string buffer;
-            if (socketList[var]->waitForReadyRead(0))
-            {
-                buffer = socketList[var]->readAll();
-                cout << buffer;
-            }
+            socketList[var]->write(buffer);
+            socketList[var]->waitForBytesWritten(1000);
         }
-        */
     }
 }
