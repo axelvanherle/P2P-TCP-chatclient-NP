@@ -68,32 +68,39 @@ void client::firstConnect(std::string IP, int port)
     }
 }
 
-void client::sendMessage(void)
+void client::sendMessage()
 {
-    while(1)
+    while (1)
     {
-        char buffer[256] = {0};
-        cin.getline(buffer,256);
-        for (unsigned long long var = 0; var < socketList.size(); ++var)
+        // Read a line of input from the user
+        std::string buffer;
+        std::getline(std::cin, buffer);
+
+        // Loop through all connected sockets and send the input to each one
+        for (QTcpSocket* socket : socketList)
         {
-            socketList[var]->write(buffer);
-            socketList[var]->waitForBytesWritten(1000);
+            socket->write(buffer.c_str());
+            socket->waitForBytesWritten(1000);
         }
     }
 }
 
-void client::receiveMessage(void)
+
+void client::receiveMessage()
 {
-    while(1)
+    while (1)
     {
-        for (unsigned long long var = 0; var < socketList.size(); ++var)
+        // Loop through all connected sockets
+        for (QTcpSocket* socket : socketList)
         {
-            string buffer;
-            if (socketList[var]->waitForReadyRead(0))
+            // Check if there is any data available to read
+            if (socket->waitForReadyRead(0))
             {
-                buffer = socketList[var]->readAll();
-                cout << "New message from [" << socketList[var] << "]: " << buffer << endl;
+                // Read the data and print a message
+                QString buffer = socket->readAll();
+                qDebug() << "New message from" << socket << ": " << buffer.toStdU16String();
             }
         }
     }
 }
+
