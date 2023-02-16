@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QAbstractSocket>
 #include <QDebug>
 
 #include <string>
