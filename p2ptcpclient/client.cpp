@@ -70,11 +70,15 @@ void client::firstConnect(std::string IP, int port)
 
 void client::sendMessage(void)
 {
-    string buffer;
-    cin >> buffer;
-    for (unsigned long long var = 0; var < socketList.size(); ++var)
+    while(1)
     {
-        socketList[var]->write(buffer.c_str());
+        char buffer[256] = {0};
+        cin.getline(buffer,256);
+        for (unsigned long long var = 0; var < socketList.size(); ++var)
+        {
+            socketList[var]->write(buffer);
+            socketList[var]->waitForBytesWritten(1000);
+        }
     }
 }
 
