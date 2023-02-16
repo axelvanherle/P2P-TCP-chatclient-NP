@@ -86,12 +86,14 @@ void client::receiveMessage(void)
 {
     while(1)
     {
-        char buffer[256] = {0};
-        cin.getline(buffer,256);
         for (unsigned long long var = 0; var < socketList.size(); ++var)
         {
-            socketList[var]->write(buffer);
-            socketList[var]->waitForBytesWritten(1000);
+            string buffer;
+            if (socketList[var]->waitForReadyRead(0))
+            {
+                buffer = socketList[var]->readAll();
+                cout << "New message from [" << socketList[var] << "]: " << buffer << endl;
+            }
         }
     }
 }
