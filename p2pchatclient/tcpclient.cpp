@@ -12,8 +12,9 @@ TcpClient::TcpClient(QObject *parent)
 void TcpClient::handleNewConnection()
 {
     QTcpSocket *socket = server->nextPendingConnection();
+    std::string peers = getPeers();
+    socket->write(peers.c_str());
     connect(socket, SIGNAL(readyRead()), this, SLOT(readFromAll()));
-    //connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
     m_sockets.append(socket);
 
     emit newConnection(socket);
@@ -99,3 +100,16 @@ void TcpClient::firstConnect(std::string firstIp, int firstPort)
     }
 }
 
+std::string TcpClient::getPeers(void)
+{
+    QString peerList = "TEST NEWCON";
+    peerList += '\n';
+    for (QTcpSocket *socket : m_sockets)
+    {
+        QString address = QHostAddress(socket->peerAddress().toIPv4Address()).toString();
+        peerList += address + ":" + QString::number(socket->peerPort()) + '\n';
+    }
+
+    std::string temp = peerList.toStdString();
+    return temp;
+}

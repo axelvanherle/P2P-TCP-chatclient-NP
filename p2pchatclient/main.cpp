@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
     {
         qDebug() << "New connection from: " << socket->peerAddress().toString();
         QObject::connect(socket, &QTcpSocket::readyRead, &client, &TcpClient::readFromAll);
-        //QObject::connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
     });
 
     QObject::connect(&client, &TcpClient::newMessageReceived, [&](QString message)

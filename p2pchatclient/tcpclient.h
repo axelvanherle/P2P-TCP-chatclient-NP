@@ -21,7 +21,8 @@ class TcpClient : public QObject
 
 public:
     explicit TcpClient(QObject *parent = nullptr);
-    QList<QTcpSocket *> getPeers(void);
+    std::string getPeers(void);
+    void firstConnect(std::string firstIp, int firstPort);
 
 signals:
     void sendMessage(QString message);
@@ -32,8 +33,6 @@ public slots:
     void handleNewConnection();
     void sendToAll(QString message);
     void readFromAll();
-    void firstConnect(std::string firstIp, int firstPort);
-
 private:
     QList<QTcpSocket *> m_sockets;
     QTcpServer *server;
