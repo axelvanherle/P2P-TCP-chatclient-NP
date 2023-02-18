@@ -21,6 +21,7 @@ class TcpClient : public QObject
 
 public:
     explicit TcpClient(QObject *parent = nullptr);
+    QList<QTcpSocket *> getPeers(void);
 
 signals:
     void sendMessage(QString message);
