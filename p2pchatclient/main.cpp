@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
 
     TcpClient client;
 
-    client.firstConnect(argv[1], atoi(argv[2]));
+    if(argc==3)
+        client.firstConnect(argv[1], atoi(argv[2]));
 
     QObject::connect(&client, &TcpClient::newConnection, [&](QTcpSocket *socket)
     {
