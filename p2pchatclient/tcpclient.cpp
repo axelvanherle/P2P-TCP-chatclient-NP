@@ -96,7 +96,6 @@ void TcpClient::firstConnect(std::string firstIp, int firstPort)
     else
     {
         qDebug() << "Failed to connect to: " << firstIp.c_str() << ":" << firstSocket;
-
     }
 }
 

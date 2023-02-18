@@ -9,11 +9,9 @@
 #include <QDebug>
 #include <QInputDialog>
 
-
 #include <iostream>
 #include <sstream>
 #include <string>
-
 
 class TcpClient : public QObject
 {
@@ -33,10 +31,10 @@ public slots:
     void handleNewConnection();
     void sendToAll(QString message);
     void readFromAll();
+
 private:
     QList<QTcpSocket *> m_sockets;
     QTcpServer *server;
 };
-
 
 #endif // TCPCLIENT_H

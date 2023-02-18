@@ -18,24 +18,21 @@ int main(int argc, char *argv[])
 
     TcpClient client;
 
-    if(argc==3)
+    if (argc == 3)
         client.firstConnect(argv[1], atoi(argv[2]));
 
     QObject::connect(&client, &TcpClient::newConnection, [&](QTcpSocket *socket)
-    {
+                     {
         qDebug() << "New connection from: " << socket->peerAddress().toString();
-        QObject::connect(socket, &QTcpSocket::readyRead, &client, &TcpClient::readFromAll);
-    });
+        QObject::connect(socket, &QTcpSocket::readyRead, &client, &TcpClient::readFromAll); });
 
     QObject::connect(&client, &TcpClient::newMessageReceived, [&](QString message)
-    {
-        qDebug() << "New message received: " << message;
-    });
+                     { qDebug() << "New message received: " << message; });
 
-    while(1)
+    while (1)
     {
         QString message = QInputDialog::getText(nullptr, "Send message", "Enter message:");
-        if(message.isEmpty())
+        if (message.isEmpty())
         {
             continue;
         }
@@ -44,4 +41,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
