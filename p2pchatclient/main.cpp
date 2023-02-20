@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
         {
             continue;
         }
+        qDebug() << "Message sent: " << message;
         client.sendToAll(message);
     }
 
