@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     // Create main window
     QWidget window;
     window.setWindowTitle("P2P-TCP-chatclient-NP by Axel Vanherle.");
-    window.setFixedSize(400, 600);
+    window.setFixedSize(800, 500);
 
     // Create widgets
     QLabel* outputLabel = new QLabel("Enter message:");
@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
     QPlainTextEdit* debugTextEdit = new QPlainTextEdit();
     debugTextEdit->setReadOnly(true);
     debugTextEdit->setMaximumHeight(110);
-    debugTextEdit->setMaximumBlockCount(6);
+    debugTextEdit->setMaximumBlockCount(100);
+    debugTextEdit->setStyleSheet("color: red;");
 
     // Create layout
     QVBoxLayout* layout = new QVBoxLayout();
