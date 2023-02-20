@@ -101,7 +101,7 @@ void TcpClient::firstConnect(std::string firstIp, int firstPort)
 
 std::string TcpClient::getPeers(void)
 {
-    QString peerList = "TEST NEWCON";
+    QString peerList = "NEWCON";
     peerList += '\n';
     for (QTcpSocket *socket : m_sockets)
     {
