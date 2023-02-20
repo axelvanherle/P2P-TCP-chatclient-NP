@@ -106,7 +106,7 @@ std::string TcpClient::getPeers(void)
     for (QTcpSocket *socket : m_sockets)
     {
         QString address = QHostAddress(socket->peerAddress().toIPv4Address()).toString();
-        peerList += address + ":" + QString::number(socket->peerPort()) + '\n';
+        peerList += address + ":" + "24042" + '\n';
     }
 
     std::string temp = peerList.toStdString();
