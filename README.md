@@ -27,3 +27,7 @@ Empty Example             |  Connected example
 4) Qt Creator should automatically detect the build settings for your project. If it doesn't, you can set them manually by clicking on "configure project" on the left-hand side of the window.
 
 5) To build and run the project, press ctrl + r. This assumes this project is the primary QT project.
+
+<hr></hr>
+
+I also made a [blogpost]( https://axelvanherle.github.io/post/21-02-23_p2ptcpchatclient/ ) about this project, check it out if you want to learn more.
