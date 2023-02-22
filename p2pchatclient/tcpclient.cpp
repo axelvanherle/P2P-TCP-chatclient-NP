@@ -34,7 +34,7 @@ void TcpClient::readFromAll()
     {
         while (socket->bytesAvailable() > 0)
         {
-            QString message = QString::fromUtf8(socket->readAll());
+            QString message = QHostAddress(socket->peerAddress().toIPv4Address()).toString() + +": " + QString::fromUtf8(socket->readAll());
             emit newMessageReceived(message);
         }
     }
